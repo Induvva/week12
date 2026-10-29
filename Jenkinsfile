@@ -1,6 +1,10 @@
-
+```groovy
 pipeline {
     agent any
+
+    environment {
+        PYTHON = 'C:\\Users\\duvva\\AppData\\Local\\Programs\\Python\\Python313\\python.exe'
+    }
 
     stages {
 
@@ -8,13 +12,13 @@ pipeline {
             steps {
                 echo "Running Selenium Tests using pytest"
 
-                bat 'python -m pip install -r requirements.txt'
+                bat '"%PYTHON%" -m pip install -r requirements.txt'
 
-                bat 'start /B "FlaskApp" python app.py'
+                bat 'start /B "FlaskApp" "%PYTHON%" app.py'
 
                 bat 'ping 127.0.0.1 -n 5 > nul'
 
-                bat 'python -m pytest -v'
+                bat '"%PYTHON%" -m pytest -v'
             }
         }
 
@@ -27,6 +31,7 @@ pipeline {
 
         stage('Docker Login') {
             steps {
+                echo "Logging in to Docker Hub"
                 bat 'docker login -u induduvva'
             }
         }

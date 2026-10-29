@@ -25,6 +25,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker Image"
+
                 bat 'docker build -t week12-app:v1 .'
             }
         }
@@ -32,7 +33,16 @@ pipeline {
         stage('Docker Login') {
             steps {
                 echo "Logging in to Docker Hub"
-                bat 'docker login -u induduvva'
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'docker-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_TOKEN'
+                    )
+                ]) {
+                     bat 'echo %DOCKER_TOKEN%| docker login -u "%DOCKER_USER%" --password-stdin'
+                }
             }
         }
 
@@ -60,6 +70,7 @@ pipeline {
         success {
             echo 'Pipeline completed successfully!'
         }
+
         failure {
             echo 'Pipeline failed. Please check the logs.'
         }

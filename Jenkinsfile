@@ -8,47 +8,44 @@ pipeline {
             steps {
                 echo "Running Selenium Tests using pytest"
 
-                // Install Python dependencies
-                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pip install -r requirements.txt'
+                bat 'python -m pip install -r requirements.txt'
 
-                // Start Flask app in background
-                bat 'start /B "FlaskApp" "C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" app.py'
+                bat 'start /B "FlaskApp" python app.py'
 
-                // Wait a few seconds for the server to start
                 bat 'ping 127.0.0.1 -n 5 > nul'
 
-                // Run tests using pytest
-                bat '"C:\\Users\\DELL\\AppData\\Local\\Programs\\Python\\Python313\\python.exe" -m pytest -v'
+                bat 'python -m pytest -v'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Build Docker Image"
-                bat "docker build -t demoapp12:v1 ."
+                echo "Building Docker Image"
+                bat 'docker build -t week12-app:v1 .'
             }
         }
 
         stage('Docker Login') {
             steps {
-                bat 'docker login -u akshayaaaaaaaaaaaaaaaaaaaaaaa -p Akshaya#2005'
+                bat 'docker login -u induduvva'
             }
         }
 
-        stage('push Docker Image to Docker Hub') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
-                echo "push Docker Image to Docker Hub"
+                echo "Pushing Docker Image to Docker Hub"
 
-                bat "docker tag demoapp12:v1 akshayaaaaaaaaaaaaaaaaaaaaaaa/week12demo:v1"
+                bat 'docker tag week12-app:v1 induduvva/week12-app:v1'
 
-                bat "docker push akshayaaaaaaaaaaaaaaaaaaaaaaa/week12demo:v1"
+                bat 'docker push induduvva/week12-app:v1'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                // Apply deployment and service
-                bat 'kubectl apply -f deployment.yaml --validate=false'
+                echo "Deploying application to Kubernetes"
+
+                bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
             }
         }

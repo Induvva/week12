@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,7 +15,7 @@ spec:
     spec:
       containers:
         - name: demoapp12
-          image: akshayaaaaaaaaaaaaaaaaaaaaaaa/week12demo:v1
+          image: induduvva/week12-app:v1
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
